@@ -263,7 +263,7 @@
                 <small>Scotbot powers all the Tribes and the SteemEngine tokens rewards</small>
               </p>
               <h3 v-if="scotbot === null">...</h3>
-              <h3 v-else-if="scotbot" class="font-success">UP<small>({{ scotbotDetails !== null ? scotbotDetails : '?' }} mins)</small></h3>
+              <h3 v-else-if="scotbot" class="font-success">UP<small>(Delay {{ scotbotDetails !== null ? `${scotbotDetails}m` : '?' }})</small></h3>
               <h3 v-else class="font-danger">DOWN</h3>
             </div>
           </div>
