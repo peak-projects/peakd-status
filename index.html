@@ -298,16 +298,7 @@
         Vue.config.devtools = true
 
         Vue.component('service-status', {
-          props: {
-            status: {
-              required: false,
-              type: Boolean
-            },
-            details: {
-              required: false,
-              type: String
-            }
-          },
+          props: ['status', 'details'],
           template: `
             <div>
               <h3 v-if="status === null">...</h3>
