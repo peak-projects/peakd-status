@@ -104,16 +104,16 @@
         display: block;
         color: #dbc7ff;
       }
-      .section--snippets .snippets__card>h3, .section--snippets .snippets__card>h5 {
+      .section--snippets .snippets__card>div>h3, .section--snippets .snippets__card>div>h5 {
         text-align: center;
         margin: 0;
       }
       @media (min-width: 769px) {
-        .section--snippets .snippets__card>h3 {
+        .section--snippets .snippets__card>div>h3, .section--snippets .snippets__card>div>h5 {
           min-width: 100px;
         }
       }
-      .section--snippets .snippets__card>h3>small {
+      .section--snippets .snippets__card>div>h3>small {
         display: block;
         font-size: 12.5px;
         font-weight: 400;
@@ -198,73 +198,61 @@
               <p>SteemPeak Website
                 <small>SteemPeak main website status and availability</small>
               </p>
-              <h3 v-if="steempeakWebsite === null">...</h3>
-              <h3 v-else-if="steempeakWebsite" class="font-success">UP<small>(ver {{ steempeakWebsiteDetails || '?' }})</small></h3>
-              <h3 v-else class="font-danger">DOWN</h3>
+              <service-status :status="steempeakWebsite" :details="steempeakWebsiteDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>SteemPeak API
                 <small>SteemPeak API and Database status</small>
               </p>
-              <h3 v-if="steempeakApi === null">...</h3>
-              <h3 v-else-if="steempeakApi" class="font-success">UP<small>({{ steempeakApiDetails || '?' }} ms)</small></h3>
-              <h3 v-else class="font-danger">DOWN</h3>
+              <service-status :status="steempeakApi" :details="steempeakApiDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>SteemPeak Scheduler
                 <small>SteemPeak Scheduler service that handles all the background operations</small>
               </p>
-              <h3 v-if="steempeakWorker === null">...</h3>
-              <h3 v-else-if="steempeakWorker" class="font-success">UP<small>(ver {{ steempeakWorkerDetails || '?' }})</small></h3>
-              <h3 v-else class="font-danger">DOWN</h3>
+              <service-status :status="steempeakWorker" :details="steempeakWorkerDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>Cloudflare
                 <small>CDN (Content Delivery Network) used to speed up SteemPeak page load</small>
               </p>
-              <h3 v-if="steempeakCdn === null">...</h3>
-              <h3 v-else-if="steempeakCdn" class="font-success">UP</h3>
-              <h3 v-else class="font-danger">DOWN</h3>
+              <service-status :status="steempeakCdn"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>SteemPeak Hivemind
                 <small>SteemPeak Hivemind powers the News page and the STEEM payouts for the Tribes</small>
               </p>
-              <h3 v-if="steempeakHivemind === null">...</h3>
-              <h3 v-else-if="steempeakHivemind" class="font-success">UP<small>(Blk {{ steempeakHivemindDetails || '?' }})</small></h3>
-              <h3 v-else class="font-danger">DOWN</h3>
+              <service-status :status="steempeakHivemind" :details="steempeakHivemindDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>Steem API/RPC Nodes
                 <small>Steem API and RPC nodes used to retrieve data and cast transactions</small>
               </p>
-              <h3 v-if="!steemNodes">...</h3>
-              <h5 v-else>
-                <span v-for="node in steemNodes" :class="node.success ? 'font-success' : 'font-danger'" style="display: block; margin-top: 2px; margin-bottom: 2px;">{{ node.label }}</span>
-              </h5>
+              <div>
+                <h3 v-if="!steemNodes">...</h3>
+                <h5 v-else>
+                  <span v-for="node in steemNodes" :class="node.success ? 'font-success' : 'font-danger'" style="display: block; margin-top: 2px; margin-bottom: 2px;">{{ node.label }}</span>
+                </h5>
+              </div>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>Steem Engine
                 <small>Steem Engine is the build block for Tribes and SE Tokens</small>
               </p>
-              <h3 v-if="steemEngine === null">...</h3>
-              <h3 v-else-if="steemEngine" class="font-success">UP<small>(Blk {{ steemEngineDetails }})</small></h3>
-              <h3 v-else class="font-danger">DOWN</h3>
+              <service-status :status="steemEngine" :details="steemEngineDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>Scotbot
                 <small>Scotbot powers all the Tribes and the SteemEngine tokens rewards</small>
               </p>
-              <h3 v-if="scotbot === null">...</h3>
-              <h3 v-else-if="scotbot" class="font-success">UP<small>(Delay {{ scotbotDetails !== null ? `${scotbotDetails}m` : '?' }})</small></h3>
-              <h3 v-else class="font-danger">DOWN</h3>
+              <service-status :status="scotbot" :details="scotbotDetails"></service-status>
             </div>
           </div>
         </div>
@@ -308,6 +296,26 @@
 
       window.onload = function() {
         Vue.config.devtools = true
+
+        Vue.component('service-status', {
+          props: {
+            status: {
+              required: false,
+              type: Boolean
+            },
+            details: {
+              required: false,
+              type: String
+            }
+          },
+          template: `
+            <div>
+              <h3 v-if="status === null">...</h3>
+              <h3 v-else-if="status" class="font-success">UP<small v-if="details">({{ details }})</small></h3>
+              <h3 v-else class="font-danger">DOWN</h3>
+            </div>
+          `
+        })
 
         new Vue({
           el: '#main',
@@ -355,7 +363,7 @@
               axios.get(`${steempeakEndpoint}/actuator/info`).then(response => {
                 console.log(response);
                 this.steempeakWebsite = response && response.data && response.data.app;
-                this.steempeakWebsiteDetails = response && response.data && response.data.app && response.data.app.version;
+                this.steempeakWebsiteDetails = `Ver ${(response && response.data && response.data.app && response.data.app.version) || '?'}`;
               }).catch(error => {
                 console.log(error);
                 this.steempeakWebsite = false;
@@ -365,7 +373,7 @@
               axios.get(`${steempeakEndpoint}/api/public/featured`).then(response => {
                 console.log(response);
                 this.steempeakApi = true;
-                this.steempeakApiDetails = (new Date()).getTime() - startTime.getTime()
+                this.steempeakApiDetails = `${(new Date()).getTime() - startTime.getTime()} ms`
               }).catch(error => {
                 console.log(error);
                 this.steempeakApi = false;
@@ -374,7 +382,7 @@
               axios.get(`${steempeakWorkerEndpoint}/actuator/info`).then(response => {
                 console.log(response);
                 this.steempeakWorker = response && response.data && response.data.app;
-                this.steempeakWorkerDetails = response && response.data && response.data.app && response.data.app.version;
+                this.steempeakWorkerDetails = `Ver ${(response && response.data && response.data.app && response.data.app.version) || '?'}`;
               }).catch(error => {
                 console.log(error);
                 this.steempeakWorker = false;
@@ -383,7 +391,7 @@
               axios.get(`${steempeakEndpoint}/api/public/hive/state`).then(response => {
                 console.log(response);
                 this.steempeakHivemind = true;
-                this.steempeakHivemindDetails = response.data.blockNum
+                this.steempeakHivemindDetails = `Blk ${response.data.blockNum || '?'}`
               }).catch(error => {
                 console.log(error);
                 this.steempeakHivemind = false;
@@ -402,7 +410,7 @@
                 console.log(response);
 
                 this.scotbot = true
-                this.scotbotDetails = parseInt(response.data.time_delay_seconds / 60)
+                this.scotbotDetails = `Delay ${parseInt(response.data.time_delay_seconds / 60)}m`
               }).catch(error => {
                 console.log(error);
                 this.scotbot = false;
@@ -417,7 +425,7 @@
                 } else {
                   console.log(result);
                   this.steemEngine = true;
-                  this.steemEngineDetails = result.refSteemBlockNumber;
+                  this.steemEngineDetails = `Blk ${result.refSteemBlockNumber || '?'}`;
                 }
               });
 
