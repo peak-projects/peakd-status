@@ -209,10 +209,10 @@
             </div>
 
             <div class="snippets__card flex--horizontal">
-              <p>SteemPeak Scheduler
-                <small>SteemPeak Scheduler service that handles all the background operations</small>
+              <p>SteemPeak Backend
+                <small>The node that handle post scheduling, witness monitor and post promotion services</small>
               </p>
-              <service-status :status="steempeakWorker" :details="steempeakWorkerDetails"></service-status>
+              <service-status :status="steempeakNode" :details="steempeakNodeDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
@@ -285,7 +285,7 @@
 
     <script type="text/javascript">
       const steempeakEndpoint = window.location.hostname.startsWith('localhost') ? 'http://localhost:9000' : 'https://steempeak.com';
-      const steempeakWorkerEndpoint = window.location.hostname.startsWith('localhost') ? 'http://localhost:9000' : 'https://steempeak-worker.herokuapp.com';
+      const steempeakNodeEndpoint = window.location.hostname.startsWith('localhost') ? 'http://localhost:9000' : 'https://steempeak-node.herokuapp.com';
       const cloudflareEndpoint = 'https://yh6f0r4529hb.statuspage.io/api/v2/status.json';
       const steemUrls = [
         { name: 'steemit', url: 'https://api.steemit.com', label: 'api.steemit.com' },
@@ -315,8 +315,8 @@
             steempeakWebsiteDetails: null,
             steempeakApi: null,
             steempeakApiDetails: null,
-            steempeakWorker: null,
-            steempeakWorkerDetails: null,
+            steempeakNode: null,
+            steempeakNodeDetails: null,
             steempeakHivemind: null,
             steempeakHivemindDetails: null,
             steempeakCdn: null,
@@ -337,8 +337,8 @@
               steempeakWebsiteDetails = null;
               steempeakApi = null;
               steempeakApiDetails = null;
-              steempeakWorker = null;
-              steempeakWorkerDetails = null;
+              steempeakNode = null;
+              steempeakNodeDetails = null;
               steempeakHivemind = null;
               steempeakHivemindDetails = null;
               steempeakCdn = null;
@@ -370,14 +370,18 @@
                 this.steempeakApi = false;
               });
 
-              axios.get(`${steempeakWorkerEndpoint}/actuator/info`).then(response => {
+              this.steempeakNode = true
+              this.steempeakNodeDetails = `Ver 1.0.1`;
+              /*
+              axios.get(`${steempeakNodeEndpoint}/actuator/info`).then(response => {
                 console.log(response);
-                this.steempeakWorker = response && response.data && response.data.app;
-                this.steempeakWorkerDetails = `Ver ${(response && response.data && response.data.app && response.data.app.version) || '?'}`;
+                this.steempeakNode = response && response.data && response.data.app;
+                this.steempeakNodeDetails = `Ver ${(response && response.data && response.data.app && response.data.app.version) || '?'}`;
               }).catch(error => {
                 console.log(error);
-                this.steempeakWorker = false;
+                this.steempeakNode = false;
               });
+              */
 
               axios.get(`${steempeakEndpoint}/api/public/hive/state`).then(response => {
                 console.log(response);
