@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maintenance | SteemPeak</title>
+    <meta property="og:title" content="Maintenance | SteemPeak" />
+    <meta property="twitter:title" content="aintenance | SteemPeak" />
+    <meta property="og:image" content="https://files.steempeak.com/file/steempeak/logo_icon_light_v2.png" />
+    <meta property="twitter:image" content="https://files.steempeak.com/file/steempeak/logo_icon_light_v2.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta property=og:site_name content=SteemPeak>
+    <meta property=twitter:site content=@steempeak>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://steempeak.com/assets/favicons/apple-touch-icon.png?v=zXbxAzp8l3">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://steempeak.com/assets/favicons/favicon-32x32.png?v=zXbxAzp8l3">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://steempeak.com/assets/favicons/favicon-16x16.png?v=zXbxAzp8l3">
+    <link rel="mask-icon" href="https://steempeak.com/assets/favicons/safari-pinned-tab.svg?v=zXbxAzp8l3" color="#4b4e4f">
+    <link rel="shortcut icon" href="https://steempeak.com/assets/favicons/favicon.ico?v=zXbxAzp8l3">
+    <meta name="theme-color" content="#263238">
+
+    <style>
+      html, body {
+        font-family: 'Montserrat', sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        background-color: #263238;
+        height: 100%;
+        width: 100%;
+        color: #d8d8d8;
+        -webkit-font-smoothing: antialiased
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #main {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .spacer {
+        padding: 10px;
+      }
+      .message {
+        text-align: center;
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 20px;
+        padding: 20px;
+      }
+      p {
+        -webkit-margin-after: 0;
+        -webkit-margin-before: 0;
+        font-size: 15px;
+        line-height: 21px;
+        margin-bottom: 4px
+      }
+      .flex--horizontal {
+        display: flex;
+        flex-direction: row;
+      }
+      .flex--vertical {
+        display: flex;
+        flex-direction: column;
+      }
+      .section--snippets .snippets__cards {
+        align-self: flex-start;
+        flex: 1;
+        z-index: 100;
+      }
+      .section--snippets .snippets__card {
+        border: 1px solid #6146d7;
+        border-radius: 3px;
+        margin-bottom: 1rem;
+        background-color: #263238e0;
+        justify-content: center;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        transition: 0.3s;
+      }
+      @media (min-width: 769px) {
+        .section--snippets .snippets__card {
+          min-width: 600px;
+        }
+      }
+      .section--snippets .snippets__card>p {
+        flex: 1;
+        margin-right: 1.5rem;
+      }
+      .section--snippets .snippets__card>p>small {
+        display: block;
+        color: #dbc7ff;
+      }
+      .section--snippets .snippets__card>div>h3, .section--snippets .snippets__card>div>h5 {
+        text-align: center;
+        margin: 0;
+      }
+      @media (min-width: 769px) {
+        .section--snippets .snippets__card>div>h3, .section--snippets .snippets__card>div>h5 {
+          min-width: 100px;
+        }
+      }
+      .section--snippets .snippets__card>div>h3>small {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 400;
+        color: #d8d8d8;
+      }
+      .font-success {
+        color: #53ffaa
+      }
+      .font-danger {
+        color: #ff247f
+      }
+      .main-icon {
+        font-size: 12em;
+        color: #5f7584;
+      }
+      @media (max-width: 768px) {
+        .main-icon {
+          font-size: 6em;
+        }
+      }
+      .mountains-bg {
+        overflow: hidden;
+        position: fixed;
+        top: calc(100vh - 180px);
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .mountain, .mountain-two, .mountain-three {
+        position: absolute;
+        bottom: 0;
+        border-left: 150px solid transparent;
+        border-right: 150px solid transparent;
+        border-bottom: 180px solid #161d21;
+        z-index: 1;
+      }
+      .mountain {
+        left: 80px;
+      }
+      .mountain-two {
+        left: 180px;
+        opacity: .5;
+        bottom: -29px;
+        z-index: 0;
+      }
+      .mountain-three {
+        left: 0px;
+        opacity: .7;
+        bottom: -18px;
+        z-index: 0;
+      }
+      .mountain-top {
+        position: absolute;
+        right: -65px;
+        border-left: 65px solid transparent;
+        border-right: 65px solid transparent;
+        border-bottom: 77px solid #e8e8e8;
+        z-index: 2;
+      }
+      .mountain-cap-1, .mountain-cap-2, .mountain-cap-3 {
+        position: absolute;
+        top: 70px;
+        border-left: 25px solid transparent;
+        border-right: 25px solid transparent;
+        border-top: 25px solid #e8e8e8;
+      }
+      .mountain-cap-1 {
+        left: -55px;
+      }
+      .mountain-cap-2 {
+        left: -25px;
+      }
+      .mountain-cap-3 {
+        left: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main" style="text-align: center;">
+      <div class="message spacer">
+        <img width="400" src="https://files.steempeak.com/file/steempeak/logo_light_v2.svg" alt="SteemPeak">
+      </div>
+
+      <section class="section--snippets message spacer">
+        <div class="main-icon">
+          <i class="fa fa-wrench" aria-hidden="true"></i>
+        </div>
+      </section>
+
+      <section class="section--snippets message spacer">
+        <div>
+          <h2>Sorry, we are down for maintenance</h2>
+          <h4>We'll be back up shortly. Check the <a href="https://status.steempeak.com" class="font-success">status page</a> or our <a href="https://discord.gg/6hCAcVp" class="font-success">Discord</a> channel for updates.</h4>
+        </div>
+      </section>
+
+      <div class="mountains-bg">
+        <div class="mountain">
+          <div class="mountain-top">
+            <div class="mountain-cap-1"></div>
+            <div class="mountain-cap-2"></div>
+            <div class="mountain-cap-3"></div>
+          </div>
+        </div>
+        <div class="mountain-two">
+          <div class="mountain-top">
+            <div class="mountain-cap-1"></div>
+            <div class="mountain-cap-2"></div>
+            <div class="mountain-cap-3"></div>
+          </div>
+        </div>
+        <div class="mountain-three">
+          <div class="mountain-top">
+            <div class="mountain-cap-1"></div>
+            <div class="mountain-cap-2"></div>
+            <div class="mountain-cap-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
