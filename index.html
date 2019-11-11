@@ -216,17 +216,17 @@
             </div>
 
             <div class="snippets__card flex--horizontal">
-              <p>Cloudflare
-                <small>CDN (Content Delivery Network) used to speed up SteemPeak page load</small>
-              </p>
-              <service-status :status="steempeakCdn"></service-status>
-            </div>
-
-            <div class="snippets__card flex--horizontal">
               <p>SteemPeak Hivemind
                 <small>SteemPeak Hivemind powers the News page and the STEEM payouts for the Tribes</small>
               </p>
               <service-status :status="steempeakHivemind" :details="steempeakHivemindDetails"></service-status>
+            </div>
+
+            <div class="snippets__card flex--horizontal">
+              <p>Cloudflare
+                <small>CDN (Content Delivery Network) used to speed up SteemPeak page load</small>
+              </p>
+              <service-status :status="steempeakCdn"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
