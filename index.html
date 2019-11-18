@@ -285,6 +285,7 @@
 
     <script type="text/javascript">
       const steempeakEndpoint = window.location.hostname.startsWith('localhost') ? 'http://localhost:9000' : 'https://steempeak.com';
+      const steempeakHiveEndpoint ='https://hive.steempeak.com/health';
       const cloudflareEndpoint = 'https://yh6f0r4529hb.statuspage.io/api/v2/status.json';
       const steemUrls = [
         { name: 'steemit', url: 'https://api.steemit.com', label: 'api.steemit.com' },
@@ -378,10 +379,10 @@
                 this.steempeakNode = false;
               });
 
-              axios.get(`${steempeakEndpoint}/api/public/status/hive`).then(response => {
+              axios.get(steempeakHiveEndpoint).then(response => {
                 console.log(response);
                 this.steempeakHivemind = true;
-                this.steempeakHivemindDetails = `Blk ${response.data.blockNum || '?'}`
+                this.steempeakHivemindDetails = `Blk ${response.data.state.db_head_block || '?'}`
               }).catch(error => {
                 console.log(error);
                 this.steempeakHivemind = false;
