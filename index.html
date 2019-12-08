@@ -361,7 +361,7 @@
               });
 
               let startTime = new Date()
-              axios.get(`${steempeakEndpoint}/api/public/featured`).then(response => {
+              axios.get(`${steempeakEndpoint}/api/public/status/monitor`).then(response => {
                 console.log(response);
                 this.steempeakApi = true;
                 this.steempeakApiDetails = `${(new Date()).getTime() - startTime.getTime()} ms`
