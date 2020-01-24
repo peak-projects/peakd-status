@@ -27,8 +27,9 @@
 
     <script type="text/javascript" src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sscjs@latest/dist/ssc.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/steem/dist/steem.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/steemconnect@3.0.4"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sscjs@latest/dist/ssc.min.js"></script>
 
     <style>
       html, body {
@@ -237,6 +238,8 @@
                 <h3 v-if="!steemNodes">...</h3>
                 <h5 v-else>
                   <span v-for="node in steemNodes" :class="node.success ? 'font-success' : 'font-danger'" style="display: block; margin-top: 2px; margin-bottom: 2px;">{{ node.label }}</span>
+                  <span v-if="steemconnect === null" style="display: block; margin-top: 2px; margin-bottom: 2px;">...</span>
+                  <span v-else :class="steemconnect ? 'font-success' : 'font-danger'" style="display: block; margin-top: 2px; margin-bottom: 2px;">steemconnect</span>
                 </h5>
               </div>
             </div>
@@ -291,6 +294,9 @@
         { name: 'steemit', url: 'https://api.steemit.com', label: 'api.steemit.com' },
         { name: 'anyx', url: 'https://anyx.io', label: 'anyx.io' }
       ];
+      const steemconnectClient = new steemconnect.Client({
+        app: 'steempeak-status.app'
+      });
       const scotbotEndpoint = 'https://scot-api.steem-engine.com/state';
       const ssc = new SSC('https://api.steem-engine.com/rpc');
 
@@ -321,6 +327,7 @@
             steempeakHivemindDetails: null,
             steempeakCdn: null,
             steemNodes: null,
+            steemconnect: null,
             steemEngine: null,
             steemEngineDetails: null,
             scotbot: null,
@@ -342,6 +349,7 @@
               steempeakHivemind = null;
               steempeakHivemindDetails = null;
               steempeakCdn = null;
+              steemconnect = null;
               steemNodes = null;
               steemEngine = null;
               steemEngineDetails = null;
@@ -356,7 +364,7 @@
                 this.steempeakWebsite = response && response.data && response.data.app;
                 this.steempeakWebsiteDetails = `Ver ${(response && response.data && response.data.app && response.data.app.version) || '?'}`;
               }).catch(error => {
-                console.log(error);
+                console.error(error);
                 this.steempeakWebsite = false;
               });
 
@@ -366,7 +374,7 @@
                 this.steempeakApi = true;
                 this.steempeakApiDetails = `${(new Date()).getTime() - startTime.getTime()} ms`
               }).catch(error => {
-                console.log(error);
+                console.error(error);
                 this.steempeakApi = false;
               });
 
@@ -375,7 +383,7 @@
                 this.steempeakNode = true;
                 this.steempeakNodeDetails = `Blk ${response.data.value || '?'}`
               }).catch(error => {
-                console.log(error);
+                console.error(error);
                 this.steempeakNode = false;
               });
 
@@ -384,7 +392,7 @@
                 this.steempeakHivemind = true;
                 this.steempeakHivemindDetails = `Blk ${response.data.state.db_head_block || '?'}`
               }).catch(error => {
-                console.log(error);
+                console.error(error);
                 this.steempeakHivemind = false;
               });
 
@@ -393,9 +401,26 @@
 
                 this.steempeakCdn = response && response.data && response.data.status && (response.data.status.indicator === 'none' || response.data.status.indicator === 'minor');
               }).catch(error => {
-                console.log(error);
+                console.error(error);
                 this.steempeakCdn = false;
               });
+
+              axios.post('https://api.steemconnect.com/api/me', {}, {
+                headers: {
+                  authorization: 'eyJzaWduZWRfbWVzc2FnZSI6eyJ0eXBlIjoicG9zdGluZyIsImFwcCI6Ii0ifSwiYXV0aG9ycyI6WyItIl0sInRpbWVzdGFtcCI6MTU3OTg4MjUwOCwic2lnbmF0dXJlcyI6WyIxZjYzNTYwZDA2NjRkMmNlOGM1MmZlYTJkN2FkYjkyMTQ1NmIyZTcwM2I1N2MyZGJhNjFkZTBjYjM5MGVjMGM5MDg2MzdiMTkyZTZjZjExNjkwZTAxYmI3ZmVjMjg2MzBmNWFjYTJkZWY2OTA2MzE5MTc1NDViYjA2NWFmYTA4Y2I2Il19'
+                },
+                timeout: 5000
+              }).then(result => {
+                console.log('Steemconnect result: ', result)
+                this.steemconnect = true
+              }).catch(error => {
+                console.error('Steemconnect error: ', error)
+                if (error.message && error.message.startsWith('timeout of ') && error.message.endsWith('exceeded')) {
+                  this.steemconnect = false
+                } else {
+                  this.steemconnect = true
+                }
+              })
 
               axios.get(scotbotEndpoint).then(response => {
                 console.log(response);
@@ -403,7 +428,7 @@
                 this.scotbot = true
                 this.scotbotDetails = `Delay ${parseInt(response.data.time_delay_seconds / 60)}m`
               }).catch(error => {
-                console.log(error);
+                console.error(error);
                 this.scotbot = false;
               });
 
@@ -414,7 +439,7 @@
                   console.log(error);
                   this.steemEngine = false;
                 } else {
-                  console.log(result);
+                  console.error(result);
                   this.steemEngine = true;
                   this.steemEngineDetails = `Blk ${result.refSteemBlockNumber || '?'}`;
                 }
