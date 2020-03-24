@@ -290,7 +290,7 @@
 
     <script type="text/javascript">
       const steempeakEndpoint = window.location.hostname.startsWith('localhost') ? 'http://localhost:9000' : 'https://peakd.com';
-      const steempeakHiveEndpoint ='https://hive.steempeak.com/health/';
+      const steempeakHiveEndpoint ='https://hive.peakd.com/health/';
       const cloudflareEndpoint = 'https://yh6f0r4529hb.statuspage.io/api/v2/status.json';
       const steemUrls = [
         { name: 'api.hive.blog', url: 'https://api.hive.blog', label: 'api.hive.blog' },
@@ -298,7 +298,9 @@
         { name: 'api.openhive.network', url: 'https://api.openhive.network', label: 'api.openhive.network' }
       ];
       const steemconnectClient = new steemconnect.Client({
-        app: 'steempeak-status.app'
+        app: 'steempeak-status.app',
+        apiURL: 'https://hivesigner.com',
+        baseURL: 'https://hivesigner.com'
       });
       const scotbotEndpoint = 'https://scot-api.steem-engine.com/state';
       const ssc = new SSC('https://api.steem-engine.com/rpc');
