@@ -9,8 +9,8 @@
     <meta property="twitter:title" content="PeakD Status Page" />
     <meta name="description" content="Status of peakd.com and related services" />
     <meta name="twitter:description" content="Status of peakd.com and related services" />
-    <meta property="og:image" content="https://beta.peakd.com/assets/images/peakd_logo_compact_256.png" />
-    <meta property="twitter:image" content="https://beta.peakd.com/assets/images/peakd_logo_compact_256.png" />
+    <meta property="og:image" content="/peakd_logo_compact_256.png" />
+    <meta property="twitter:image" content="/peakd_logo_compact_256.png" />
     <meta name="twitter:card" content="summary" />
     <meta property=og:site_name content=PeakD>
     <meta property=twitter:site content=@PeakDcom>
@@ -28,9 +28,7 @@
 
     <script type="text/javascript" src="https://unpkg.com/vue@2.6.10/dist/vue.js"></script>
     <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/steem/dist/steem.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/steemconnect@3.0.4"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sscjs@latest/dist/ssc.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@hiveio/hive-js/dist/hive.min.js"></script>
 
     <style>
 
@@ -39,7 +37,7 @@
   <body>
     <div id="main">
       <div class="message spacer">
-        <img width="400" src="https://beta.peakd.com/assets/images/peakd_logo_white.svg" alt="PeakD">
+        <img width="400" src="/peakd_logo_white.svg" alt="PeakD">
         <div style="margin-top: 15px;">
           <h3>Current status of PeakD and the Hive Blockchain</h3>
         </div>
@@ -52,35 +50,42 @@
               <p>PeakD Website
                 <small>PeakD main website status and availability</small>
               </p>
-              <service-status :status="steempeakWebsite" :details="steempeakWebsiteDetails"></service-status>
+              <service-status :status="peakdWebsite" :details="peakdWebsiteDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>PeakD API
                 <small>PeakD API and database status</small>
               </p>
-              <service-status :status="steempeakApi" :details="steempeakApiDetails"></service-status>
+              <service-status :status="peakdApi" :details="peakdApiDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>PeakD Backend
                 <small>The node that handle post scheduling, witness monitor and post promotion services</small>
               </p>
-              <service-status :status="steempeakNode" :details="steempeakNodeDetails"></service-status>
+              <service-status :status="peakdNode" :details="peakdNodeDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
-              <p>PeakD Hivemind
-                <small>PeakD Hivemind nodes power some exclusive features as account lists and favorites</small>
+              <p>PeakD IPFS
+                <small>Decentralized version of PeakD available on IPFS at <a href="https://ipfs.peakd.com" target="_blank" rel="noopener" class="font-success">ipfs.peakd.com</a></small>
               </p>
-              <service-status :status="steempeakHivemind" :details="steempeakHivemindDetails"></service-status>
+              <service-status :status="true"></service-status>
+            </div>
+
+            <div class="snippets__card flex--horizontal">
+              <p>PeakD Hivemind Plugin
+                <small>PeakD Hivemind plugin nodes power some exclusive features as account lists and favorites</small>
+              </p>
+              <service-status :status="peakdHivemind" :details="peakdHivemindDetails"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
               <p>Cloudflare
                 <small>CDN (Content Delivery Network) used to speed up PeakD page load</small>
               </p>
-              <service-status :status="steempeakCdn"></service-status>
+              <service-status :status="peakdCdn"></service-status>
             </div>
 
             <div class="snippets__card flex--horizontal">
@@ -88,34 +93,16 @@
                 <small>
                   Hive API and RPC nodes used to retrieve data and cast transactions.
                   <br>
-                  For additional details and stats check <a href="https://hivestatus.usehive.com/" target="_blank" rel="noopener" class="font-success">this page</a>
+                  For additional details and stats check <a href="https://beacon.peakd.com/" target="_blank" rel="noopener" class="font-success">this page</a>
                 </small>
               </p>
               <div>
-                <h3 v-if="!steemNodes">...</h3>
+                <h3 v-if="!hiveNodes">...</h3>
                 <h5 v-else>
-                  <span v-for="node in steemNodes" :class="node.success ? 'font-success' : 'font-danger'" style="display: block; margin-top: 2px; margin-bottom: 2px;">{{ node.label }}</span>
-                  <span v-if="steemconnect === null" style="display: block; margin-top: 2px; margin-bottom: 2px;">...</span>
-                  <span v-else :class="steemconnect ? 'font-success' : 'font-danger'" style="display: block; margin-top: 2px; margin-bottom: 2px;">hivesigner</span>
+                  <span v-for="node in hiveNodes" :class="node.success ? 'font-success' : 'font-danger'" style="display: block; margin-top: 2px; margin-bottom: 2px;">{{ node.label }}</span>
                 </h5>
               </div>
             </div>
-
-            <!--
-            <div class="snippets__card flex--horizontal">
-              <p>Steem Engine
-                <small>Steem Engine is the building block for Tribes and SE Tokens</small>
-              </p>
-              <service-status :status="steemEngine" :details="steemEngineDetails"></service-status>
-            </div>
-
-            <div class="snippets__card flex--horizontal">
-              <p>Scotbot
-                <small>Scotbot powers all the Tribes and the SteemEngine tokens rewards</small>
-              </p>
-              <service-status :status="scotbot" :details="scotbotDetails"></service-status>
-            </div>
-            -->
           </div>
         </div>
       </section>
@@ -146,21 +133,14 @@
     </div>
 
     <script type="text/javascript">
-      const steempeakEndpoint = window.location.hostname.startsWith('localhost') ? 'http://localhost:9000' : 'https://peakd.com';
-      const steempeakHiveEndpoint ='https://hive.peakd.com/health/';
+      const peakdEndpoint = window.location.hostname.startsWith('localhost') ? 'http://localhost:9000' : 'https://peakd.com';
+      const peakdHiveEndpoint ='https://hive-data.peakd.com/';
       const cloudflareEndpoint = 'https://yh6f0r4529hb.statuspage.io/api/v2/status.json';
-      const steemUrls = [
+      const hiveUrls = [
         { name: 'api.hive.blog', url: 'https://api.hive.blog', label: 'api.hive.blog' },
-        { name: 'anyx.io', url: 'https://anyx.io', label: 'anyx.io' },
-        { name: 'api.openhive.network', url: 'https://api.openhive.network', label: 'api.openhive.network' }
+        { name: 'api.openhive.network', url: 'https://api.openhive.network', label: 'api.openhive.network' },
+        { name: 'hive.roelandp.nl', url: 'https://hive.roelandp.nl', label: 'hive.roelandp.nl' },
       ];
-      const steemconnectClient = new steemconnect.Client({
-        app: 'steempeak-status.app',
-        apiURL: 'https://hivesigner.com',
-        baseURL: 'https://hivesigner.com'
-      });
-      const scotbotEndpoint = 'https://scot-api.steem-engine.com/state';
-      const ssc = new SSC('https://api.steem-engine.com/rpc');
 
       window.onload = function() {
         Vue.config.devtools = true
@@ -179,21 +159,16 @@
         new Vue({
           el: '#main',
           data: {
-            steempeakWebsite: null,
-            steempeakWebsiteDetails: null,
-            steempeakApi: null,
-            steempeakApiDetails: null,
-            steempeakNode: null,
-            steempeakNodeDetails: null,
-            steempeakHivemind: null,
-            steempeakHivemindDetails: null,
-            steempeakCdn: null,
-            steemNodes: null,
-            steemconnect: null,
-            steemEngine: null,
-            steemEngineDetails: null,
-            scotbot: null,
-            scotbotDetails: null
+            peakdWebsite: null,
+            peakdWebsiteDetails: null,
+            peakdApi: null,
+            peakdApiDetails: null,
+            peakdNode: null,
+            peakdNodeDetails: null,
+            peakdHivemind: null,
+            peakdHivemindDetails: null,
+            peakdCdn: null,
+            hiveNodes: null,
           },
           mounted: function () {
             console.log('Status page mounted')
@@ -202,134 +177,89 @@
           },
           methods: {
             reset () {
-              steempeakWebsite = null;
-              steempeakWebsiteDetails = null;
-              steempeakApi = null;
-              steempeakApiDetails = null;
-              steempeakNode = null;
-              steempeakNodeDetails = null;
-              steempeakHivemind = null;
-              steempeakHivemindDetails = null;
-              steempeakCdn = null;
-              steemconnect = null;
-              steemNodes = null;
-              steemEngine = null;
-              steemEngineDetails = null;
-              scotbot = null;
-              scotbotDetails = null;
+              peakdWebsite = null;
+              peakdWebsiteDetails = null;
+              peakdApi = null;
+              peakdApiDetails = null;
+              peakdNode = null;
+              peakdNodeDetails = null;
+              peakdHivemind = null;
+              peakdHivemindDetails = null;
+              peakdCdn = null;
+              hiveNodes = null;
             },
             async refresh () {
               this.reset();
 
-              axios.get(`${steempeakEndpoint}/actuator/info`).then(response => {
+              axios.get(`${peakdEndpoint}/actuator/info`).then(response => {
                 console.log(response);
-                this.steempeakWebsite = response && response.data && response.data.app;
-                this.steempeakWebsiteDetails = `Ver ${(response && response.data && response.data.app && response.data.app.version) || '?'}`;
+                this.peakdWebsite = response && response.data && response.data.app;
+                this.peakdWebsiteDetails = `Ver ${(response && response.data && response.data.app && response.data.app.version) || '?'}`;
               }).catch(error => {
                 console.error(error);
-                this.steempeakWebsite = false;
+                this.peakdWebsite = false;
               });
 
               let startTime = new Date()
-              axios.get(`${steempeakEndpoint}/api/public/status/monitor`).then(response => {
+              axios.get(`${peakdEndpoint}/api/public/status/monitor`).then(response => {
                 console.log(response);
-                this.steempeakApi = true;
-                this.steempeakApiDetails = `${(new Date()).getTime() - startTime.getTime()} ms`
+                this.peakdApi = true;
+                this.peakdApiDetails = `${(new Date()).getTime() - startTime.getTime()} ms`
               }).catch(error => {
                 console.error(error);
-                this.steempeakApi = false;
+                this.peakdApi = false;
               });
 
-              axios.get(`${steempeakEndpoint}/api/public/status/monitor`).then(response => {
+              axios.get(`${peakdEndpoint}/api/public/status/monitor`).then(response => {
                 console.log(response);
-                this.steempeakNode = true;
-                this.steempeakNodeDetails = `Blk ${response.data.value || '?'}`
+                this.peakdNode = true;
+                this.peakdNodeDetails = `Blk ${response.data.value || '?'}`
               }).catch(error => {
                 console.error(error);
-                this.steempeakNode = false;
+                this.peakdNode = false;
               });
 
-              axios.get(steempeakHiveEndpoint).then(response => {
+              axios.get(peakdHiveEndpoint).then(response => {
                 console.log(response);
-                this.steempeakHivemind = true;
-                this.steempeakHivemindDetails = `Blk ${response.data.state.db_head_block || '?'}`
+                this.peakdHivemind = true;
+                this.peakdHivemindDetails = `Ver ${response.data.version || '?'}`
               }).catch(error => {
                 console.error(error);
-                this.steempeakHivemind = false;
+                this.peakdHivemind = true;
               });
 
               axios.get(cloudflareEndpoint).then(response => {
                 console.log(response);
 
-                this.steempeakCdn = response && response.data && response.data.status && (response.data.status.indicator === 'none' || response.data.status.indicator === 'minor');
+                this.peakdCdn = response && response.data && response.data.status && (response.data.status.indicator === 'none' || response.data.status.indicator === 'minor');
               }).catch(error => {
                 console.error(error);
-                this.steempeakCdn = false;
+                this.peakdCdn = false;
               });
 
-              axios.post('https://api.steemconnect.com/api/me', {}, {
-                headers: {
-                  authorization: 'eyJzaWduZWRfbWVzc2FnZSI6eyJ0eXBlIjoicG9zdGluZyIsImFwcCI6Ii0ifSwiYXV0aG9ycyI6WyItIl0sInRpbWVzdGFtcCI6MTU3OTg4MjUwOCwic2lnbmF0dXJlcyI6WyIxZjYzNTYwZDA2NjRkMmNlOGM1MmZlYTJkN2FkYjkyMTQ1NmIyZTcwM2I1N2MyZGJhNjFkZTBjYjM5MGVjMGM5MDg2MzdiMTkyZTZjZjExNjkwZTAxYmI3ZmVjMjg2MzBmNWFjYTJkZWY2OTA2MzE5MTc1NDViYjA2NWFmYTA4Y2I2Il19'
-                },
-                timeout: 5000
-              }).then(result => {
-                console.log('Steemconnect result: ', result)
-                this.steemconnect = true
-              }).catch(error => {
-                console.error('Steemconnect error: ', error)
-                if (error.message && error.message.startsWith('timeout of ') && error.message.endsWith('exceeded')) {
-                  this.steemconnect = false
-                } else {
-                  this.steemconnect = true
-                }
-              })
-
-              axios.get(scotbotEndpoint).then(response => {
-                console.log(response);
-
-                this.scotbot = true
-                this.scotbotDetails = `Delay ${parseInt(response.data.time_delay_seconds / 60)}m`
-              }).catch(error => {
-                console.error(error);
-                this.scotbot = false;
-              });
-
-              ssc.getLatestBlockInfo((error, result) => {
-                console.log(error, result);
-
-                if (error) {
-                  console.log(error);
-                  this.steemEngine = false;
-                } else {
-                  console.error(result);
-                  this.steemEngine = true;
-                  this.steemEngineDetails = `Blk ${result.refSteemBlockNumber || '?'}`;
-                }
-              });
-
-              let steemResults = {};
-              for (let node of steemUrls) {
+              let hiveResults = {};
+              for (let node of hiveUrls) {
                 console.log('Checking node: ' + node.url);
 
                 let results = []
                 try {
-                  steem.api.setOptions({ url: node.url });
-                  results.push(await steem.api.getDynamicGlobalPropertiesAsync());
-                  results.push(await steem.api.getAccountsAsync(['peakd']));
-                  results.push(await await steem.api.getWitnessesByVoteAsync('', 20));
-                  steemResults[node.name] = {
+                  hive.api.setOptions({ url: node.url });
+                  results.push(await hive.api.getDynamicGlobalPropertiesAsync());
+                  results.push(await hive.api.getAccountsAsync(['peakd']));
+                  results.push(await await hive.api.getWitnessesByVoteAsync('', 20));
+                  hiveResults[node.name] = {
                     success: true,
                     label: node.label,
                     results: results
                   };
                 } catch (error) {
-                  steemResults[node.name] = {
+                  hiveResults[node.name] = {
                     success: false,
                     label: node.label
                   };
                 }
               }
-              this.steemNodes = steemResults;
+              this.hiveNodes = hiveResults;
             }
           }
         });
